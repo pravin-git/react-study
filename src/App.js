@@ -1,26 +1,50 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 
-import Home from './components/Home';
-import About from './components/About';
-import Contact from './components/Contact';
-import Navigation from './components/Navigation';
+import LandingPage from './components/LandingPage';
+
+const initialState = {
+  count: 0
+};
+
+const counterReducer = (state = initialState, action) =>{
+  console.log(state);
+  console.log(action);
+  switch (action.type) {
+    case 'INCREMENT':
+      return {
+        ...state,
+        count : state.count + 1
+      };
+      break;
+    case 'DECREMENT':
+      return {
+        ...state,
+        count : state.count - 1
+      };
+      break;
+    default:
+      return state;
+      break;
+  }
+
+}
+
+const store = createStore(counterReducer);
+
+store.subscribe(() => {
+  console.log(store.getState());
+})
+
+//console.log(store);
 
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
-        <div>
-          <Navigation/>
-          <Switch>
-            <Route path="/" component= { Home } exact />
-            <Route path="/about" component= { About } />
-            <Route path="/contact" component= { Contact } />
-            <Route component= { Contact } />
-          </Switch>
-          <Navigation/>
-        </div>
-      </BrowserRouter>
+      <Provider store = {store}>
+        <LandingPage/>
+      </Provider>
     );
   }
 }
